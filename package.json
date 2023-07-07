@@ -4,6 +4,7 @@
   "description": "API para processo seletivo",
   "main": "index.js",
   "scripts": {
+    "start": "ts-node",
     "test": "jest"
   },
   "keywords": [],
