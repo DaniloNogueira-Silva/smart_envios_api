@@ -1,6 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { IntentionEntity } from "../../../domain/entities/intention.entity";
 import { IntentionRepository } from "../../../repositories/intention/intention.repository";
+import { intentionValidation } from "../../../domain/validations/intention.validation";
 
 type MyRequest = FastifyRequest;
 type MyReply = FastifyReply;
@@ -15,6 +16,7 @@ export class IntentionController {
   }
 
   create: RequestHandler = async (req, res) => {
+    await intentionValidation.validate(req.body)
     const intentionInterface: IntentionEntity = req.body as IntentionEntity;
     const intention: IntentionEntity = await this.repository.create(
       intentionInterface

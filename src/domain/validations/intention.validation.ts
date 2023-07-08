@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-export const userValidation = yup.object({
+export const intentionValidation = yup.object({
   id: yup.string().required(),
   zipcode_start: yup.string().required(),
   zipcode_end: yup.string().required(),
