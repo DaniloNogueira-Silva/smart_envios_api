@@ -1,6 +1,5 @@
 import {PrismaClient } from '@prisma/client';
-import { LeadEntity } from '../../entities/lead.entity';
-
+import { LeadEntity } from "../../domain/entities/lead.entity"; 
 
 const prisma = new PrismaClient();
 

@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { IntentionRepository } from "./intention.repository";
-import { IntentionEntity } from "../../entities/intention.entity";
+import { IntentionEntity } from "../../domain/entities/intention.entity"; 
 
 const prisma = new PrismaClient();
 

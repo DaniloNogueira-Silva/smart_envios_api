@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client';
-import { IntentionEntity } from '../../entities/intention.entity';
+import { IntentionEntity } from '../../domain/entities/intention.entity';
+import { LeadRepository } from '../lead/lead.repository'; 
+import { LeadEntity } from '../../domain/entities/lead.entity'; 
 
 const prisma = new PrismaClient();
 
