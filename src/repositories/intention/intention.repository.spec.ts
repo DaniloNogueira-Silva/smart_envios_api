@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { PrismaClient } from "@prisma/client";
 import { IntentionRepository } from "./intention.repository";
 import { IntentionEntity } from "../../domain/entities/intention.entity";
@@ -20,60 +21,48 @@ afterAll(async () => {
 beforeEach(async () => {
   await prisma.intention.deleteMany();
   await prisma.lead.deleteMany();
-
 });
 
-afterEach( async () => {
+afterEach(async () => {
   await prisma.intention.deleteMany();
   await prisma.lead.deleteMany();
-})
+});
 
 it('should update intentions', async () => {
-  // Criação dos leads
-  const lead1: LeadEntity = {
-    id: "intentionTeste1",
+  // Criação do lead
+  const lead: LeadEntity = {
+    id: uuidv4(),
     name: "joao",
     email: 'joao@gmail.com',
   };
 
-  const lead2: LeadEntity = {
-    id: "intentionTeste2",
-    name: "dasfadfasdasda",
-    email: 'faasdadasdso@gmail.com',
-  };
+  const createdLead: LeadEntity = await leadRepository.create(lead);
 
-  const createdLead1: LeadEntity = await leadRepository.create(lead1);
-  const createdLead2: LeadEntity = await leadRepository.create(lead2);
-
-  expect(createdLead1.id).toBe("intentionTeste1");
-  expect(createdLead1.name).toBe('joao');
-  expect(createdLead1.email).toBe("joao@gmail.com");
-
-  expect(createdLead2.id).toBe("intentionTeste2");
-  expect(createdLead2.name).toBe('dasfadfasdasda');
-  expect(createdLead2.email).toBe("faasdadasdso@gmail.com");
+  expect(createdLead.id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+  expect(createdLead.name).toBe('joao');
+  expect(createdLead.email).toBe("joao@gmail.com");
 
   // Criação da intention
   const intention: IntentionEntity = {
-    id: "12313132sdsad",
+    id: uuidv4(),
     zipcode_start: "12313124141241",
     zipcode_end: '524745664',
-    lead_id: createdLead1.id
+    lead_id: createdLead.id
   };
 
   const createdIntention: IntentionEntity = await intentionRepository.create(intention);
 
-  expect(createdIntention.id).toBe("12313132sdsad");
+  expect(createdIntention.id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
   expect(createdIntention.zipcode_start).toBe('12313124141241');
   expect(createdIntention.zipcode_end).toBe("524745664");
-  expect(createdIntention.lead_id).toBe(createdLead1.id);
+  expect(createdIntention.lead_id).toBe(createdLead.id);
 
   // Atualização da intention
   const updatedIntention: IntentionEntity = {
     id: createdIntention.id,
     zipcode_start: "12313124141241",
     zipcode_end: '524745664',
-    lead_id: createdLead2.id
+    lead_id: createdLead.id
   };
 
   const updatedIntentionResult: IntentionEntity = await intentionRepository.update(updatedIntention.id, updatedIntention);
@@ -81,5 +70,5 @@ it('should update intentions', async () => {
   expect(updatedIntentionResult.id).toBe(createdIntention.id);
   expect(updatedIntentionResult.zipcode_start).toBe('12313124141241');
   expect(updatedIntentionResult.zipcode_end).toBe("524745664");
-  expect(updatedIntentionResult.lead_id).toBe(createdLead2.id);
+  expect(updatedIntentionResult.lead_id).toBe(createdLead.id);
 });
