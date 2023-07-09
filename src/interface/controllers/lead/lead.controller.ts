@@ -2,6 +2,7 @@ import { FastifyRequest, FastifyReply } from "fastify";
 import { LeadRepository } from "../../../repositories/lead/lead.repository";
 import { LeadEntity } from "../../../domain/entities/lead.entity";
 import { leadValidation } from "../../../domain/validations/lead.validation";
+import nodemailer from "nodemailer";
 
 type MyRequest = FastifyRequest;
 type MyReply = FastifyReply;
@@ -16,9 +17,33 @@ export class LeadController {
   }
 
   create: RequestHandler = async (req, res) => {
-    await leadValidation.validate(req.body)
-    const leadInterface: LeadEntity = req.body as LeadEntity;
-    const lead: LeadEntity = await this.repository.create(leadInterface);
-    res.send(lead);
+    try {
+      // await leadValidation.validate(req.body);
+      const leadInterface: LeadEntity = req.body as LeadEntity;
+      const lead: LeadEntity = await this.repository.create(leadInterface);
+
+      const user = "danilo.nogueira1802@gmail.com";
+      const pass = "icrwvhemhvjnntun";
+      const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+          user,
+          pass,
+        },
+      });
+
+      await transporter.sendMail({
+        from: user,
+        to: leadInterface.email,
+        subject: "Lead Criado",
+        text: "Agradecemos seu interesse pela nossa plataforma!",
+      });
+
+      res.send(lead);
+    }catch (error) {
+      res.send({ error: "Internal Server Error" });
+    }
   };
 }

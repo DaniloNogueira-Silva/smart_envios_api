@@ -1,15 +1,19 @@
 import Fastify from "fastify";
-import cors from "@fastify/cors";
+import fastifyCors from "@fastify/cors";
 import routes from "./interface/routes";
+import dotenv from 'dotenv';
 
 const server = Fastify();
-server.register(cors);
-routes(server)
+server.register(fastifyCors);
+routes(server);
+dotenv.config();
 
 server
-  .listen({
-    port: 4554,
-  })
+  .listen(4554)
   .then(() => {
-    console.log("Server rodando");
+    console.log("Server rodando na porta 4554");
+  })
+  .catch((error) => {
+    console.error("Erro ao iniciar o server", error);
+    process.exit(1);
   });
