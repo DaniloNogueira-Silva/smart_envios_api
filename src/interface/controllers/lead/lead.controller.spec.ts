@@ -6,20 +6,22 @@ import { LeadController } from "./lead.controller";
 type MyRequest = FastifyRequest;
 type MyReply = FastifyReply;
 
-const createLeadMock = jest.fn(async (lead: LeadEntity) => {
-  const createdLead: LeadEntity = {
-    id: "1",
-    name: 'mock',
-    email: "mock@gmail.com"
-  };
-  return createdLead;
-});
-
 describe("Lead Controller", () => {
   let leadController: LeadController;
+  let leadRepositoryMock: LeadRepository;
+  let createLeadMock: jest.Mock;
 
   beforeEach(() => {
-    const leadRepositoryMock = {
+    createLeadMock = jest.fn(async (lead: LeadEntity) => {
+      const createdLead: LeadEntity = {
+        id: "1",
+        name: lead.name,
+        email: lead.email,
+      };
+      return createdLead;
+    });
+
+    leadRepositoryMock = {
       create: createLeadMock,
     } as unknown as LeadRepository;
 
@@ -28,7 +30,10 @@ describe("Lead Controller", () => {
 
   it("create should create a new lead", async () => {
     const req: MyRequest = {
-      body: {} as LeadEntity,
+      body: {
+        name: "mock",
+        email: "mock@gmail.com",
+      } as LeadEntity,
     } as MyRequest;
 
     const sendMock = jest.fn();
@@ -40,11 +45,10 @@ describe("Lead Controller", () => {
     await leadController.create(req, res);
 
     expect(createLeadMock).toHaveBeenCalledTimes(1);
-
     expect(sendMock).toHaveBeenCalledWith({
       id: "1",
-      name: 'mock',
-      email: "mock@gmail.com"
+      name: "mock",
+      email: "mock@gmail.com",
     });
   });
 });

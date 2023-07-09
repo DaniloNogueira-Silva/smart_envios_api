@@ -1,48 +1,50 @@
 import { PrismaClient } from "@prisma/client";
 import { LeadRepository } from "./lead.repository";
-import { LeadEntity } from "../../domain/entities/lead.entity"; 
+import { LeadEntity } from "../../domain/entities/lead.entity";
 
 const prisma = new PrismaClient();
 
 describe('Lead Repository Unit Test', () => {
-    let leadRepository : LeadRepository;
+  let leadRepository: LeadRepository;
 
-    beforeAll(() => {
-        leadRepository = new LeadRepository();
-    })
+  beforeAll(() => {
+    leadRepository = new LeadRepository();
+  });
 
-    afterAll(async () => {
-        await prisma.$disconnect();
-    });
+  afterAll(async () => {
+    await prisma.$disconnect();
+  });
 
-    it('create should a new lead', async () => {
-        const newLead: LeadEntity = {
-            id: "teste1",
-            name: "joao",
-            email: 'joao@gmail.com',
-        };
+  afterEach(async () => {
+    // Limpar os dados após cada teste
+    await prisma.lead.deleteMany();
+  });
 
-        const createdLead: LeadEntity = await leadRepository.create(newLead);
+  it('create should create a new lead', async () => {
+    const newLead: LeadEntity = {
+      id: "teste1",
+      name: "joao",
+      email: 'joao@gmail.com',
+    };
 
-        expect(createdLead.id).toBe("teste1");
-        expect(createdLead.name).toBe('joao');
-        expect(createdLead.email).toBe("joao@gmail.com");
+    const createdLead: LeadEntity = await leadRepository.create(newLead);
 
-    })
+    expect(createdLead.id).toBe("teste1");
+    expect(createdLead.name).toBe('joao');
+    expect(createdLead.email).toBe("joao@gmail.com");
+  });
 
-    it('create should a new lead', async () => {
-        const newLead: LeadEntity = {
-            id: "teste2",
-            name: "dasfadfasdasda",
-            email: 'faasdadasdso@gmail.com',
-        };
+  it('create should create another new lead', async () => {
+    const newLead: LeadEntity = {
+      id: "teste2",
+      name: "dasfadfasdasda",
+      email: 'faasdadasdso@gmail.com',
+    };
 
-        const createdLead: LeadEntity = await leadRepository.create(newLead);
+    const createdLead: LeadEntity = await leadRepository.create(newLead);
 
-        expect(createdLead.id).toBe("teste2");
-        expect(createdLead.name).toBe('dasfadfasdasda');
-        expect(createdLead.email).toBe("faasdadasdso@gmail.com");
-
-    })
-
-})
+    expect(createdLead.id).toBe("teste2");
+    expect(createdLead.name).toBe('dasfadfasdasda');
+    expect(createdLead.email).toBe("faasdadasdso@gmail.com");
+  });
+});

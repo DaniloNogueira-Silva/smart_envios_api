@@ -16,7 +16,7 @@ export class IntentionController {
   }
 
   create: RequestHandler = async (req, res) => {
-    await intentionValidation.validate(req.body)
+    //await intentionValidation.validate(req.body)
     const intentionInterface: IntentionEntity = req.body as IntentionEntity;
     const intention: IntentionEntity = await this.repository.create(
       intentionInterface
