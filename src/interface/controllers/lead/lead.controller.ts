@@ -22,8 +22,8 @@ export class LeadController {
       const leadInterface: LeadEntity = req.body as LeadEntity;
       const lead: LeadEntity = await this.repository.create(leadInterface);
 
-      const user = "danilo.nogueira1802@gmail.com";
-      const pass = "icrwvhemhvjnntun";
+      const user = process.env.USER;
+      const pass = process.env.PASS;
       const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 465,
