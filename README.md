@@ -11,6 +11,8 @@
 - Uuid
 - Yup
 
+Para uso do nodemailer, é preciso criar uma .env com um email e senha(para apps) para poder enviar os email após o cadastro de um lead!
+
 # Documentação para o uso da API 
 ## ENDPOINTS
 ### POST "/lead"
